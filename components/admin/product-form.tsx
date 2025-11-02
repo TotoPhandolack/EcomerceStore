@@ -89,15 +89,18 @@ const onSubmit:SubmitHandler<z.infer<typeof insertProductSchema>> = async (value
                 <FormItem className="w-full">
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                        <div className="relative">
-                        <Input placeholder="Enter slug" {...field}/>
-                        <Button 
-                        type="button" 
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 mt-2 cursor-pointer"
-                        onClick={()=> {
-                            form.setValue('slug',slugify(form.getValues('name'), { lower: true }))
-                        }}
-                        >Generate</Button>
+                        <div className="space-y-2">
+                            <Input placeholder="Enter slug" {...field}/>
+                            <Button 
+                                type="button" 
+                                size="sm"
+                                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 w-full md:w-auto"
+                                onClick={()=> {
+                                    form.setValue('slug',slugify(form.getValues('name'), {lower:true}))
+                                }}
+                            >
+                                Generate
+                            </Button>
                         </div>
                     </FormControl>
                     <FormMessage/>
