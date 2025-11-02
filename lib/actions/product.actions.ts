@@ -37,6 +37,7 @@ export async function getAllProducts({
     category?: string;
 }) {
     const data = await prisma.product.findMany({
+        orderBy: {createAt: 'desc'},
         skip:(page -1) * limit,
         take: limit
     });
