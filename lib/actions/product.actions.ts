@@ -5,6 +5,7 @@ import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants"
 import { revalidatePath } from 'next/cache'
 import { insertProductSchema, updateProductSchema } from '../validators'
 import z from 'zod'
+import { Prisma } from '@prisma/client'
 
 // Get latest products
 export async function getLatestProducts(){
@@ -36,16 +37,34 @@ export async function getAllProducts({
     page: number;
     category?: string;
 }) {
+    // Build where clause based on filters
+    const whereClause: Prisma.ProductWhereInput = {};
+    
+    if (query) {
+        whereClause.OR = [
+            { name: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } },
+        ];
+    }
+    
+    if (category && category !== 'all') {
+        whereClause.category = category;
+    }
+
     const data = await prisma.product.findMany({
-        orderBy: {createAt: 'desc'},
-        skip:(page -1) * limit,
+        where: whereClause,
+        orderBy: { createAt: 'desc' },
+        skip: (page - 1) * limit,
         take: limit
     });
 
-    const dataCount = await prisma.product.count()
+    const dataCount = await prisma.product.count({
+        where: whereClause
+    });
 
     return {
-        data,totalPages: Math.ceil(dataCount / limit)
+        data,
+        totalPages: Math.ceil(dataCount / limit)
     }
 }
 

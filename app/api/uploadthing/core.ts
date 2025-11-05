@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" }); 
+// const auth = (req: Request) => ({ id: "fakeId" }); 
 export const ourFileRouter = {
   
   imageUploader: f({
@@ -21,4 +21,5 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
+
 export type OurFileRouter = typeof ourFileRouter;

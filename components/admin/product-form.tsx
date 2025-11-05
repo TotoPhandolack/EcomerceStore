@@ -5,7 +5,7 @@ import { insertProductSchema, updateProductSchema } from "@/lib/validators";
 import { Product } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
+import { ControllerRenderProps, SubmitHandler, useForm, Resolver } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
@@ -17,6 +17,10 @@ import { createProduct, updateProduct } from "@/lib/actions/product.actions";
 import { UploadButton } from "@uploadthing/react";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
+import { OurFileRouter } from "@/app/api/uploadthing/core";
+
+
+type FormSchema = z.infer<typeof insertProductSchema>;
 
 const ProductForm = ({type, product, productId}: {
     type: 'Create' | 'Update';
@@ -26,15 +30,15 @@ const ProductForm = ({type, product, productId}: {
 }) => {
     const router = useRouter()
 
-    const form = useForm<z.infer<typeof insertProductSchema>>({
+    const form = useForm<FormSchema>({
     resolver: type === 'Update' 
-        ? zodResolver(updateProductSchema) 
+        ? zodResolver(updateProductSchema)  as Resolver<FormSchema>
         : zodResolver(insertProductSchema),
     defaultValues: 
         product && type === 'Update' ? product : productDefaultValues
 })
 
-const onSubmit:SubmitHandler<z.infer<typeof insertProductSchema>> = async (values) => {
+const onSubmit:SubmitHandler<FormSchema> = async (values) => {
     if(type === 'Create') {
         const res = await createProduct(values)
 
@@ -196,12 +200,13 @@ const images = form.watch('images');
                                     <Image key={image} src={image} alt="product image" className="w-20 h-20 object-cover object-center rounded-sm" width={100} height={100}/>
                                 )) }
                                 <FormControl>
-                                    <UploadButton endpoint='imageUploader' onClientUploadComplete={(res: {url: string}[]) => {
+                                    <UploadButton<OurFileRouter, "imageUploader">
+                                    endpoint='imageUploader' 
+                                    onClientUploadComplete={(res: {url: string}[]) => {
                                         form.setValue('images', [...images, res[0].url])
                                     }}
                                     onUploadError={(error: Error) => {
                                         toast.error(`ERROR! ${error.message}`)
-
                                     }}
                                     />
                                 </FormControl>
