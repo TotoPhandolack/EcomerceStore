@@ -9,7 +9,18 @@ const nextConfig: NextConfig = {
     },
   },
 
-  webpack: (config, { isServer }) => {
+  images:{
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+        port: '',
+      }
+    ]
+
+  },
+
+  webpack: (config) => {
     // Windows-specific fixes for file system permissions
     config.watchOptions = {
       ...config.watchOptions,
