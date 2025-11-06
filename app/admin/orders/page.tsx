@@ -26,7 +26,8 @@ const AdminOrdersPage = async (props: {
     });
 
 
-    return ( <div className="space-y-2">
+    return ( 
+    <div className="space-y-2">
         <h2 className="h2-bold">Orders</h2>
         <div className="overflow-x-auto">
             <Table>
@@ -68,7 +69,8 @@ const AdminOrdersPage = async (props: {
                 )
             }
         </div>
-    </div>  );
+    </div>
+      );
 }
  
 export default AdminOrdersPage;
