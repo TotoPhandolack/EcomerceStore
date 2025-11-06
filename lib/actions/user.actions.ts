@@ -225,3 +225,5 @@ export async function deleteUser(id: string) {
         return {success: false, message: formatError(error)}
     }
 }
+
+// Update a user

@@ -54,7 +54,7 @@ const AdminUserPage = async (props: {
                             <TableCell>
                                 <Button asChild variant='outline'
                                 size='sm'>
-                                <Link href={`admin/users/${user.id}`}>
+                                <Link href={`/admin/users/${user.id}`}>
                                     Edit
                                 </Link>
                                 </Button>
