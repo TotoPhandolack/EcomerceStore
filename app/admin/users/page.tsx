@@ -2,10 +2,11 @@ import Pagination from "@/components/shared/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getAllUsers } from "@/lib/actions/user.actions";
+import { getAllUsers,deleteUser } from "@/lib/actions/user.actions";
 import { formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
+import DeleteDialog from "@/components/shared/delete-dialog";
 
 export const metadata: Metadata = {
     title: 'Admin Users'
@@ -57,8 +58,8 @@ const AdminUserPage = async (props: {
                                     Edit
                                 </Link>
                                 </Button>
-                                 {/* <DeleteDialog 
-                                id={user.id} action={deleteOrder}/> */}
+                                 <DeleteDialog 
+                                id={user.id} action={deleteUser}/>
                             </TableCell>
                         </TableRow>
                     )) }
