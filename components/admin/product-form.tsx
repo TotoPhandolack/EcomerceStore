@@ -18,6 +18,7 @@ import { UploadButton } from "@uploadthing/react";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
+import { Checkbox } from "../ui/checkbox";
 
 
 type FormSchema = z.infer<typeof insertProductSchema>;
@@ -69,6 +70,8 @@ const onSubmit:SubmitHandler<FormSchema> = async (values) => {
 }
 
 const images = form.watch('images');
+const isFeatured = form.watch('isFeatured');
+const banner = form.watch('banner');
 
 
     return ( 
@@ -174,7 +177,7 @@ const images = form.watch('images');
             name='stock'
             render={({ field }: { field: ControllerRenderProps<z.infer<typeof insertProductSchema>, 'stock'>; }) => (
                 <FormItem className="w-full">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Stock</FormLabel>
                     <FormControl>
                         <Input placeholder="Enter stock" {...field}/>
                     </FormControl>
@@ -223,6 +226,41 @@ const images = form.watch('images');
 
         <div className="upload-field">
             {/* isFeature */}
+            Featured Product
+            <Card>
+                <CardContent className="space-x-2 items-center">
+                    <FormField
+                    control={form.control}
+                    name='isFeatured'
+                    render={({ field}) => (
+                        <FormItem className="space-x-2 items-center">
+                        <FormControl>
+                        <Checkbox 
+                        checked={ field.value} 
+                        onCheckedChange={field.onChange}
+                         />
+                        </FormControl>
+                        <FormLabel>Is Featured?</FormLabel>
+                        </FormItem>
+                    )}
+                    />
+                    { isFeatured && banner && (
+                        <Image src={banner} alt="banner image" className="w-full object-cover object-center rounded-sm" width={1920} height={680}/>
+                    )}
+
+                    {isFeatured && !banner && (
+                        <UploadButton<OurFileRouter, "imageUploader">
+                                    endpoint='imageUploader' 
+                                    onClientUploadComplete={(res: {url: string}[]) => {
+                                        form.setValue('banner', res[0].url)
+                                    }}
+                                    onUploadError={(error: Error) => {
+                                        toast.error(`ERROR! ${error.message}`)
+                                    }}
+                                    />
+                    )}
+                </CardContent>
+            </Card>
         </div>
 
         <div className="upload-field">
