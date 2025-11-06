@@ -33,8 +33,7 @@ const AdminUserPage = async (props: {
                         <TableHead>ID</TableHead>
                         <TableHead>DATE</TableHead>
                         <TableHead>TOTAL</TableHead>
-                        <TableHead>PAID</TableHead>
-                        <TableHead>DELIVERED</TableHead>
+                        <TableHead>ROLE</TableHead>
                         <TableHead>ACTIONS</TableHead>
                     </TableRow>
                 </TableHeader>
