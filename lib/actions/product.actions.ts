@@ -42,7 +42,6 @@ export async function getAllProducts({
     category,
     price,
     rating,
-    sort
 }: {
     query: string;
     limit?: number;
@@ -50,74 +49,50 @@ export async function getAllProducts({
     category?: string;
     price?: string;
     rating?: string;
-    sort?: string;
 }) {
     const whereClause: Prisma.ProductWhereInput = {};
-    
-    // แก้ไขตรงนี้ - เพิ่ม query !== 'all'
-    if (query && query !== 'all') {
-        whereClause.OR = [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-        ];
-    }
-    
-    if (category && category !== 'all') {
-        whereClause.category = category;
-    }
 
-    // เพิ่มการกรองตามราคา
-    if (price && price !== 'all') {
-        const priceRanges: { [key: string]: { min: number; max: number } } = {
-            '0-50': { min: 0, max: 50 },
-            '50-100': { min: 50, max: 100 },
-            '100-200': { min: 100, max: 200 },
-            '200+': { min: 200, max: 999999 }
-        };
-        
-        if (priceRanges[price]) {
-            whereClause.price = {
-                gte: priceRanges[price].min,
-                lte: priceRanges[price].max
-            };
-        }
-    }
+    // Query filter
+    const queryFilter: Prisma.ProductWhereInput = 
+    query && query !== 'all' 
+    ? {
+        name: {
+         contains: query,
+         mode: 'insensitive',
+        }as Prisma.StringFilter
+        } 
+        : {};
+    // Category filter
+    const categoryFilter = category && category !== 'all' ? { category } : {};
 
-    // เพิ่มการกรองตามคะแนน
-    if (rating && rating !== 'all') {
-        const minRating = parseFloat(rating);
-        if (!isNaN(minRating)) {
-            whereClause.rating = {
-                gte: minRating
-            };
+    // Price filter
+    const priceFilter: Prisma.ProductWhereInput = price && price !== 'all' ? {
+        price: {
+            gte: Number(price.split('-')[0]),
+            lte: Number(price.split('-')[1]),
         }
-    }
 
-    // เพิ่มการเรียงลำดับ
-    let orderBy: Prisma.ProductOrderByWithRelationInput = { createAt: 'desc' };
+    } : {};
     
-    if (sort && sort !== 'newest') {
-        switch (sort) {
-            case 'oldest':
-                orderBy = { createAt: 'asc' };
-                break;
-            case 'price-low-to-high':
-                orderBy = { price: 'asc' };
-                break;
-            case 'price-high-to-low':
-                orderBy = { price: 'desc' };
-                break;
-            case 'rating':
-                orderBy = { rating: 'desc' };
-                break;
-            default:
-                orderBy = { createAt: 'desc' };
+
+
+    // Rating filter
+    const ratingFilter = rating && rating !== 'all' ? {
+        rating: {
+            gte: Number(rating)
         }
-    }
+    } : {};
+
+    
 
     const data = await prisma.product.findMany({
-        where: whereClause,
-        orderBy: orderBy,
+        orderBy: { createAt: 'desc' },
+        where: {
+            ...queryFilter,
+            ...categoryFilter,
+            ...priceFilter,
+            ...ratingFilter,
+        },
         skip: (page - 1) * limit,
         take: limit
     });

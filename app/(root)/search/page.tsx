@@ -16,7 +16,6 @@ const SearchPage = async (props: {
         category = 'all',
         price = 'all',
         rating = 'all',
-        sort = 'newest',
         page = '1',
      } = await props.searchParams;
 
@@ -25,7 +24,6 @@ const SearchPage = async (props: {
         category,
         price,
         rating,
-        sort,
         page: Number(page),
      })
 
