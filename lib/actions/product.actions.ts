@@ -40,16 +40,22 @@ export async function getAllProducts({
     limit = PAGE_SIZE,
     page,
     category,
+    price,
+    rating,
+    sort
 }: {
     query: string;
     limit?: number;
     page: number;
     category?: string;
+    price?: string;
+    rating?: string;
+    sort?: string;
 }) {
-    // Build where clause based on filters
     const whereClause: Prisma.ProductWhereInput = {};
     
-    if (query) {
+    // แก้ไขตรงนี้ - เพิ่ม query !== 'all'
+    if (query && query !== 'all') {
         whereClause.OR = [
             { name: { contains: query, mode: 'insensitive' } },
             { description: { contains: query, mode: 'insensitive' } },
@@ -60,9 +66,58 @@ export async function getAllProducts({
         whereClause.category = category;
     }
 
+    // เพิ่มการกรองตามราคา
+    if (price && price !== 'all') {
+        const priceRanges: { [key: string]: { min: number; max: number } } = {
+            '0-50': { min: 0, max: 50 },
+            '50-100': { min: 50, max: 100 },
+            '100-200': { min: 100, max: 200 },
+            '200+': { min: 200, max: 999999 }
+        };
+        
+        if (priceRanges[price]) {
+            whereClause.price = {
+                gte: priceRanges[price].min,
+                lte: priceRanges[price].max
+            };
+        }
+    }
+
+    // เพิ่มการกรองตามคะแนน
+    if (rating && rating !== 'all') {
+        const minRating = parseFloat(rating);
+        if (!isNaN(minRating)) {
+            whereClause.rating = {
+                gte: minRating
+            };
+        }
+    }
+
+    // เพิ่มการเรียงลำดับ
+    let orderBy: Prisma.ProductOrderByWithRelationInput = { createAt: 'desc' };
+    
+    if (sort && sort !== 'newest') {
+        switch (sort) {
+            case 'oldest':
+                orderBy = { createAt: 'asc' };
+                break;
+            case 'price-low-to-high':
+                orderBy = { price: 'asc' };
+                break;
+            case 'price-high-to-low':
+                orderBy = { price: 'desc' };
+                break;
+            case 'rating':
+                orderBy = { rating: 'desc' };
+                break;
+            default:
+                orderBy = { createAt: 'desc' };
+        }
+    }
+
     const data = await prisma.product.findMany({
         where: whereClause,
-        orderBy: { createAt: 'desc' },
+        orderBy: orderBy,
         skip: (page - 1) * limit,
         take: limit
     });
