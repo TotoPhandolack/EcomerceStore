@@ -1,4 +1,5 @@
 import ProductCard from "@/components/shared/product/product-card";
+import { Button } from "@/components/ui/button";
 import { getAllProducts, getAllCategories } from "@/lib/actions/product.actions";
 import Link from "next/link";
 
@@ -23,7 +24,9 @@ const prices = [
         name: '$501 tp $q000',
         value: '501-1000'
     },
-]
+];
+
+const ratings = [4, 3, 2, 1];
 
 
 const SearchPage = async (props: {
@@ -106,7 +109,7 @@ const SearchPage = async (props: {
             </div>
 
             {/* Price Links */}
-            <div className="text-xl mb-2 mt-3">Department</div>
+            <div className="text-xl mb-2 mt-8">Department</div>
             <div>
                 <ul className="space-y-1">
                     <li>
@@ -123,9 +126,47 @@ const SearchPage = async (props: {
                     ))}
                 </ul>
             </div>
+
+            {/* rating Links */}
+            <div className="text-xl mb-2 mt-8">Customer Ratings</div>
+            <div>
+                <ul className="space-y-1">
+                    <li>
+                        <Link className={`${(rating === 'all') && 'font-bold'}`} href={getFilterUrl({r: 'all'})}>
+                        Any
+                        </Link>
+                    </li>
+                    { ratings.map((r) => (
+                        <li key={r}>
+                            <Link className={`${rating === r.toString() && 'font-bold'}`} href={getFilterUrl({ r: `${r}` })}>
+                            {`${r} stars & up`}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
             
         </div>
             <div className="md:col-span-4 sapce-y-4">
+                <div className="flex-between flex-col md:flex-row my-4">
+                    <div className="flex items-center">
+                        { q !== 'all' && 'Query: ' + q}
+                        { category !== 'all' && category !== '' && 'Category:' + category}
+                        { price !== 'all' && ' Price:' + price }
+                        { rating !== 'all' && 'Rating: ' + rating + ' stars & up'}
+                        &nbsp;
+                        {(q !== 'all' && q !== '') || 
+                          (category !== 'all' && category !== '') || 
+                          rating !== 'all' ||
+                          price !== 'all' ? (
+                            <Button variant={'link'} asChild>
+                                <Link href='/search'>Clear</Link>
+                            </Button>
+                          ) : null
+                        
+                        }
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {products.data.length === 0 && <div>No Product Found</div>}
                     {products.data.map((product) => (
