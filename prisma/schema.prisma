@@ -44,7 +44,7 @@ model User {
   session       Session[]
   Cart          Cart[]
   Order         Order[]
-  reviews       Review[]
+  Reviews       Review[]
 }
 
 model Account {

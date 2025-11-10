@@ -5,7 +5,7 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { reviewFormDefaultValue } from "@/lib/constants";
+import { reviewFormDefaultValues } from "@/lib/constants";
 import { insertReviewSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog } from "@radix-ui/react-dialog";
@@ -15,6 +15,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
 import { createUpdateReview } from "@/lib/actions/review.action";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 
 const ReviewForm = ({ 
@@ -33,7 +34,7 @@ const ReviewForm = ({
 
     const form = useForm<z.infer<typeof insertReviewSchema>>({
         resolver: zodResolver(insertReviewSchema),
-        defaultValues: reviewFormDefaultValue
+        defaultValues: reviewFormDefaultValues
     });
 
 
@@ -80,29 +81,38 @@ const ReviewForm = ({
                             <FormField 
                             control={form.control}
                             name="title"
-                            render={({field}) => (
-                                <FormItem>
+                            render={({field}) => {
+                                return (
+                                    <FormItem>
                                     <FormLabel>Title</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter title" {...field} />
                                     </FormControl>
                                 </FormItem>
-                            )} />
+                                )
+                            }}
+                             />
+
                             <FormField 
                             control={form.control}
                             name="description"
-                            render={({field}) => (
-                                <FormItem>
+                            render={({field}) => {
+                                return (
+                                    <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter title" {...field} />
+                                        <Textarea placeholder="Enter description" {...field} />
                                     </FormControl>
                                 </FormItem>
-                            )} />
+                                )
+                            }}
+                             />
+
                             <FormField 
                             control={form.control}
                             name="rating"
-                            render={({field}) => (
+                            render={({field}) => {
+                                return ( 
                                 <FormItem>
                                     <FormLabel>Rating</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value.toString()}>
@@ -124,8 +134,9 @@ const ReviewForm = ({
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>
-                                </FormItem>
-                            )} />
+                                </FormItem> 
+                                )
+                            }} />
                         </div>
                         <DialogFooter>
                             <Button 
