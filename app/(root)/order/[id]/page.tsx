@@ -28,7 +28,7 @@ const OrderDetailPage = async (props: {
         // Check if is not paid and using stripe
         if(order.paymentMethod === 'Stripe' && !order.isPaid) {
             // Int stripe instane
-            const stripe = new Stripe(process.env.SRIPE_SECRET_KEY as string)
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
             // Create payment intent
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: Math.round(Number(order.totalPrice) * 100),
