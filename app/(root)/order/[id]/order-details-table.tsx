@@ -32,18 +32,23 @@ import {
     updateOrderToPaidCOD,
     deliverOrder
        } from '@/lib/actions/order.actions'
+
+import StripePayment from "./stripe-payment";
+
 import { toast } from "sonner";
 import { useTransition } from "react";
 
 const OrderDetailsTable = ({
     order,
     paypalClientId,
-    isAdmin
+    isAdmin,
+    stripeClientSecret,
 
 }: {
     order: Order,
     paypalClientId:string,
-    isAdmin:boolean
+    isAdmin:boolean,
+    stripeClientSecret: string | null
     
     }) => {
 
@@ -249,6 +254,17 @@ const OrderDetailsTable = ({
                         </PayPalScriptProvider>
                     </div>
                 )}
+
+                {/* Stripe payment */}
+                {
+                !isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                    <StripePayment
+                     priceInCents={Number(order.totalPrice) * 100}
+                     orderId={order.id}
+                     clientSecret={stripeClientSecret}
+                    />
+                )
+                }
 
                 {/* Cash on Delivery */}
                 {
