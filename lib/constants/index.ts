@@ -5,23 +5,23 @@ export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhos
 export const LATEST_PRODUCTS_LIMIT = Number(process.env.LATEST_PRODUCTS_LIMIT) || 6
 
 export const signInDefaultValues = {
-    email:'',
-    password:''
+    email: '',
+    password: ''
 }
 
 export const signUpDefaultValues = {
-    name:'',
-    email:'',
-    password:'',
-    confirmPassword:''
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
 }
 
 export const shippingAddressDefaultValues = {
-    fullName:'',
-    streetAddress:'',
-    city:'',
-    postalCode:'',
-    country:''
+    fullName: '',
+    streetAddress: '',
+    city: '',
+    postalCode: '',
+    country: ''
 
 }
 
@@ -50,6 +50,8 @@ export const USER_ROLES = process.env.USER_ROLES ? process.env.USER_ROLES.split(
 
 export const reviewFormDefaultValues = {
     title: '',
-    comment:'',
+    comment: '',
     rating: 0,
-}
+};
+
+export const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev'
