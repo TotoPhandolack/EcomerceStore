@@ -7,26 +7,26 @@ import { auth } from "@/auth";
 import Stripe from 'stripe'
 
 export const metadata: Metadata = {
-title: 'Order Details',
+    title: 'Order Details',
 
 }
 
 const OrderDetailPage = async (props: {
     params: Promise<{
-        id:string
+        id: string
     }>
 }) => {
     const { id } = await props.params
 
     const order = await getOrderById(id)
-    if(!order) notFound()
+    if (!order) notFound()
 
     const session = await auth();
 
     let client_secret = null;
 
     // Check if is not paid and using stripe
-    if(order.paymentMethod === 'Stripe' && !order.isPaid) {
+    if (order.paymentMethod === 'Stripe' && !order.isPaid) {
         // Init stripe instance
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
         // Create payment intent
@@ -38,17 +38,17 @@ const OrderDetailPage = async (props: {
         client_secret = paymentIntent.client_secret
     }
 
-    return ( 
-    <OrderDetailsTable 
-    order={ {
-        ...order,
-        shippingAddress: order.shippingAddress as ShippingAddress
-    }}
-    stripeClientSecret = {client_secret}
-    paypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'}
-    isAdmin={session?.user?.role === 'admin' || false}
-    />
+    return (
+        <OrderDetailsTable
+            order={{
+                ...order,
+                shippingAddress: order.shippingAddress as ShippingAddress
+            }}
+            stripeClientSecret={client_secret}
+            paypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'}
+            isAdmin={session?.user?.role === 'admin' || false}
+        />
     );
 }
- 
+
 export default OrderDetailPage;
