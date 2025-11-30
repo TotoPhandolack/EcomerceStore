@@ -15,6 +15,14 @@ import {
 import { Order } from "@/types";
 import { formatCurrency } from '@/lib/utils';
 import sampleData from '@/db/sample-data';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('dotenv').config();
+
+type OrderInformationProps = {
+    order: Order;
+};
+
+
 
 PurchaseReceiptEmail.PreviewProps = {
     order: {
@@ -39,12 +47,11 @@ PurchaseReceiptEmail.PreviewProps = {
         itemsPrice: '80',
         orderItems: sampleData.products.map((x) => ({
             name: x.name,
-            orderId: '123',
             productId: '123',
             slug: x.slug,
             qty: x.stock,
             image: x.images[0],
-            price: x.price,
+            price: x.price.toString(),
         })),
         isDelivered: true,
         deliveredAt: new Date(),
@@ -61,7 +68,7 @@ PurchaseReceiptEmail.PreviewProps = {
 
 const dateformatter = new Intl.DateTimeFormat('en', { dateStyle: 'medium' })
 
-export default function PurchaseReceipEmail({ order }: { order: Order }) {
+export default function PurchaseReceiptEmail({ order }: { order: Order }) {
     return (
         <Html>
             <Preview>View order receipt</Preview>
