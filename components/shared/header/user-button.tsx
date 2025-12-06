@@ -2,18 +2,18 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { signOutUser } from "@/lib/actions/user.actions";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent,DropdownMenuItem, DropdownMenuLabel,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { UserIcon } from "lucide-react";
 
-const UserButton = async() => {
+const UserButton = async () => {
 
     const session = await auth()
 
-    if(!session){
+    if (!session) {
         return (
             <Button asChild>
                 <Link href='/sign-in'>
-                <UserIcon/> Sign In
+                    <UserIcon /> Sign In
                 </Link>
 
             </Button>
@@ -22,7 +22,7 @@ const UserButton = async() => {
 
     const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? 'U'
 
-    return ( <div className="flex gap-2 items-center">
+    return (<div className="flex gap-2 items-center">
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="flex item-center">
@@ -36,33 +36,33 @@ const UserButton = async() => {
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         <div className="text-sm font-medium leading-none">
-                        {session.user?.name}
+                            {session.user?.name}
                         </div>
                     </div>
 
                     <div className="flex flex-col space-y-1">
                         <div className="text-sm text-muted-foreground leading-none">
-                        {session.user?.email}
+                            {session.user?.email}
                         </div>
                     </div>
-                    
+
                 </DropdownMenuLabel>
 
                 <DropdownMenuItem>
                     <Link href='/user/profile' className="w-full">
-                User profile</Link>
+                        User profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                     <Link href='/user/orders' className="w-full">
-                Order History</Link>
+                        Order History</Link>
                 </DropdownMenuItem>
 
                 {session?.user?.role === 'admin' && (
-                <DropdownMenuItem>
-                    <Link href='/admin/overview' className="w-full">
-                Admin</Link>
-                </DropdownMenuItem>
-                 )}
+                    <DropdownMenuItem>
+                        <Link href='/admin/overview' className="w-full">
+                            Admin</Link>
+                    </DropdownMenuItem>
+                )}
 
                 <DropdownMenuItem className="p-0 mb-1">
                     <form action={signOutUser} className="w-full">
@@ -71,10 +71,10 @@ const UserButton = async() => {
                         </Button>
                     </form>
                 </DropdownMenuItem>
-                
+
             </DropdownMenuContent>
         </DropdownMenu>
-    </div> );
+    </div>);
 }
- 
+
 export default UserButton;
