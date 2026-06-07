@@ -80,7 +80,7 @@ const DealCountdown = () => {
                 </div>
                 <div className='flex justify-center'>
                     <Image
-                        src='/images/adidas-adizero-evo-sl-black-white-1.jpg'
+                        src='/images/products/sasom/adidas-adizero-evo-sl-black-white-1.jpg'
                         alt='promotion'
                         width={300}
                         height={200}
@@ -114,7 +114,7 @@ const DealCountdown = () => {
             </div>
             <div className='flex justify-center'>
                 <Image
-                    src='/images/adidas-adizero-evo-sl-black-white-1.jpg'
+                     src='/images/products/sasom/adidas-adizero-evo-sl-black-white-1.jpg'
                     alt='promotion'
                     width={300}
                     height={200}
