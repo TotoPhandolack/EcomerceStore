@@ -14,7 +14,7 @@ type LogoProps = {
 };
 
 const LIGHT_LOGO = "/images/Light%20theme.png";
-const DARK_LOGO = "/images/Dark%20theme.png";
+const DARK_LOGO = "/images/pure.png";
 
 const Logo = ({
   className,
@@ -38,7 +38,7 @@ const Logo = ({
       width={width}
       alt={`${APP_NAME} logo`}
       priority={priority}
-      className={cn("rounded-[15%] object-contain", className)}
+      className={cn("rounded-[100%] rotate-20 object-contain", className)}
     />
   );
 };
